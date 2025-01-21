@@ -1,12 +1,27 @@
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
     public float speed = 50f;
     public Rigidbody rb;
+    public TextMeshProUGUI scoreText;  
     public int health = 5;
     private int score = 0;
+    void SetScoreText()
+    {
+        if (scoreText != null)
+        {
+            scoreText.text = "Score: " + score;
+        }
+        else
+        {
+            Debug.LogWarning("Le champ ScoreText (TextMeshProUGUI) n'est pas assigné dans l'Inspecteur !");
+        }
+    }
+
     void Update()
     {
          // Check if health is 0
@@ -26,6 +41,7 @@ public class PlayerController : MonoBehaviour
         {
             score++;
             Debug.Log("Score: " + score);
+            SetScoreText();
             other.gameObject.SetActive(false);
         }
         if (other.CompareTag("Trap"))
