@@ -8,18 +8,16 @@ public class PlayerController : MonoBehaviour
     public float speed = 50f;
     public Rigidbody rb;
     public TextMeshProUGUI scoreText;  
+    public TextMeshProUGUI healthText;  
     public int health = 5;
     private int score = 0;
     void SetScoreText()
     {
-        if (scoreText != null)
-        {
-            scoreText.text = "Score: " + score;
-        }
-        else
-        {
-            Debug.LogWarning("Le champ ScoreText (TextMeshProUGUI) n'est pas assigné dans l'Inspecteur !");
-        }
+        scoreText.text = "Score: " + score;
+    }
+    void SetHealthText()
+    {
+        healthText.text = "Health: " + health;
     }
 
     void Update()
@@ -46,7 +44,7 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Trap"))
         {
             health--;
-            Debug.Log("Health: " + health);
+            SetHealthText();
         }
         if (other.CompareTag("Goal"))
         {
