@@ -40,7 +40,6 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Pickup"))
         {
             score++;
-            Debug.Log("Score: " + score);
             SetScoreText();
             other.gameObject.SetActive(false);
         }
