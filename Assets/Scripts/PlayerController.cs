@@ -1,5 +1,6 @@
-using UnityEngine.SceneManagement;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 
@@ -7,34 +8,30 @@ public class PlayerController : MonoBehaviour
 {
     public float speed = 50f;
     public Rigidbody rb;
-    public TextMeshProUGUI scoreText;  
-    public TextMeshProUGUI healthText;  
+    public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI healthText;
+    public TextMeshProUGUI winLoseText;
+    public Image winLoseImage;
     public int health = 5;
     private int score = 0;
-    void SetScoreText()
+
+    void Start()
     {
-        scoreText.text = "Score: " + score;
-    }
-    void SetHealthText()
-    {
-        healthText.text = "Health: " + health;
+        SetScoreText();
+        SetHealthText();
+        winLoseImage.gameObject.SetActive(false); // Masquer l'écran de fin au départ
     }
 
     void Update()
     {
-         // Check if health is 0
         if (health <= 0)
         {
-            Debug.Log("Game Over!");
-
-            // Reload the current scene
-            SceneManager.LoadScene(this.gameObject.scene.name);
-            // Reset health and score (done automatically since the scene is reloaded)
+            EndGame(false);
         }
     }
+
     void OnTriggerEnter(Collider other)
     {
-        // Check if the object is tagged as "Pickup"
         if (other.CompareTag("Pickup"))
         {
             score++;
@@ -48,10 +45,52 @@ public class PlayerController : MonoBehaviour
         }
         if (other.CompareTag("Goal"))
         {
-            Debug.Log("You Win!");
-            Application.Quit();
+            EndGame(true);
         }
     }
+
+    private void SetScoreText()
+    {
+        scoreText.text = "Score: " + score;
+    }
+
+    private void SetHealthText()
+    {
+        healthText.text = "Health: " + health;
+    }
+
+    private void SetEndScreen(bool win)
+    {
+        winLoseImage.gameObject.SetActive(true);
+        if (win)
+        {
+            winLoseText.text = "You Win!";
+            winLoseText.color = Color.black;
+            winLoseImage.color = Color.green;
+        }
+        else
+        {
+            winLoseText.text = "Game Over!";
+            winLoseText.color = Color.white;
+            winLoseImage.color = Color.red;
+        }
+    }
+
+    private void EndGame(bool win)
+    {
+        SetEndScreen(win);
+        StartCoroutine(LoadScene(1)); // Recharger après 3 secondes
+    }
+    #region Methods
+        
+    IEnumerator LoadScene(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        SceneManager.LoadScene(this.gameObject.scene.name);
+
+
+    }
+    #endregion
     void FixedUpdate()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
