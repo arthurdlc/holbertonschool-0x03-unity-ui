@@ -28,6 +28,11 @@ public class PlayerController : MonoBehaviour
         {
             EndGame(false);
         }
+
+        if (Input.GetKey("escape"))
+        {
+            SceneManager.LoadScene("menu");
+        }
     }
 
     void OnTriggerEnter(Collider other)
